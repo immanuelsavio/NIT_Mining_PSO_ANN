@@ -1,7 +1,7 @@
 from __future__ import print_function
 import matplotlib.pyplot as plt
 import numpy as np
-import csv 
+import pandas as pd  
 from ParticleSwarmOptimization import ParticleSwarmOptimizedNN
 from utils import train_test_split, to_categorical, normalize, Plot
 from NeuralNetwork import NeuralNetwork
@@ -11,9 +11,8 @@ from optimizers import Adam
 
 def main():
 
-    X, y = datasets.make_classification(n_samples=1000, n_features=10, n_classes=4, n_clusters_per_class=1, n_informative=2)
-
-    data = datasets.load_iris()
+    data = pd.read_csv("data.csv")
+    
     X = normalize(data.data)
     y = data.target
     y = to_categorical(y.astype("int"))
