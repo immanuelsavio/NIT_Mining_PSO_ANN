@@ -11,8 +11,9 @@ from optimizers import Adam
 
 def main():
 
-    data = pd.read_csv("data.csv")
-    
+    df = pd.read_csv("data.csv",sep=',')
+    print(df.head)
+    pd.DataFrame(df)
     X = normalize(data.data)
     y = data.target
     y = to_categorical(y.astype("int"))
