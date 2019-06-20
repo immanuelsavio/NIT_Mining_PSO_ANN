@@ -5,7 +5,7 @@ import pandas as pd
 import seaborn as sb
 from ParticleSwarmOptimization import ParticleSwarmOptimizedNN
 from utils import train_test_split, to_categorical, normalize, Plot
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, datasets
 from NeuralNetwork import NeuralNetwork
 from layers import Activation, Dense
 from loss_functions import CrossEntropy
@@ -17,11 +17,18 @@ def main():
     #print(df.head)
     x = normalize(df)
     X = pd.DataFrame(x).drop(labels="PPV", axis=1)
-    #print(X)
     y = pd.DataFrame(df.PPV)
-    #print(y)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=1)
+    #print(X_train.head)
+    #print(y_train.head)
+    
+    data = datasets.load_iris()
+    Y = data.target
+    print(Y.head)
+    Y = to_categorical(Y.astype("int"))
+    print(Y)
     #print(y.shape[1])
-
+'''
    # Model builder
     def model_builder(n_inputs, n_outputs):    
         model = NeuralNetwork(optimizer=Adam(), loss=CrossEntropy)
@@ -61,8 +68,12 @@ def main():
                         max_velocity=5,
                         model_builder=model_builder)
 
+    print("Model Built---------------------")
+
     model = model.evolve(X_train, y_train, n_generations=n_generations)
-'''
+
+    print("----------------------Model Evolved")
+
     loss, accuracy = model.test_on_batch(X_test, y_test)
 
     print ("Accuracy: %.1f%%" % float(100*accuracy))
