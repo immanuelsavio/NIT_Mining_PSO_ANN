@@ -1,86 +1,52 @@
-from __future__ import print_function
-import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd  
-import seaborn as sb
-from ParticleSwarmOptimization import ParticleSwarmOptimizedNN
-from utils import train_test_split, to_categorical, normalize, Plot
-from sklearn.model_selection import train_test_split, datasets
-from NeuralNetwork import NeuralNetwork
-from layers import Activation, Dense
-from loss_functions import CrossEntropy
-from optimizers import Adam
+import pandas as pd
+import tensorflow as tf
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import cross_val_score
+df=pd.read_csv("data.csv")
+#print(df.describe()) #to understand the dataset
 
-def main():
+y_val= df["PPV"]
+x_data=df.drop("PPV",axis=1)
 
-    df = pd.read_csv("data.csv",sep=',')
-    #print(df.head)
-    x = normalize(df)
-    X = pd.DataFrame(x).drop(labels="PPV", axis=1)
-    y = pd.DataFrame(df.PPV)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=1)
-    #print(X_train.head)
-    #print(y_train.head)
+
+X_train, X_eval,y_train,y_eval=train_test_split(x_data,y_val,test_size=0.2,random_state=7)
+
+scaler_model = MinMaxScaler()
+scaler_model.fit(X_train)
+
+X_train=pd.DataFrame(scaler_model.transform(X_train),columns=X_train.columns,index=X_train.index)
+
+scaler_model.fit(X_eval)
+
+X_eval=pd.DataFrame(scaler_model.transform(X_eval),columns=X_eval.columns,index=X_eval.index)
+
+feat_cols=[]    
+for cols in df.columns[:-1]:
+    column=tf.feature_column.numeric_column(cols)
+    feat_cols.append(column)
     
-    data = datasets.load_iris()
-    Y = data.target
-    print(Y.head)
-    Y = to_categorical(Y.astype("int"))
-    print(Y)
-    #print(y.shape[1])
-'''
-   # Model builder
-    def model_builder(n_inputs, n_outputs):    
-        model = NeuralNetwork(optimizer=Adam(), loss=CrossEntropy)
-        model.add(Dense(6, input_shape=(n_inputs,)))
-        model.add(Activation('relu'))
-        model.add(Dense(12))
-        model.add(Activation('relu'))
-        model.add(Dense(1))
+#print(feat_cols)
 
-        return model
+#The estimator model
+model=tf.estimator.DNNRegressor(hidden_units=[6,10,6],feature_columns=feat_cols)
 
-    # Print the model summary of a individual in the population
-    print ("")
-    model_builder(n_inputs=X.shape[1], n_outputs=y.shape[1]).summary()
+#the input function
+print("Started")
+input_func=tf.estimator.inputs.pandas_input_fn(X_train,y_train,batch_size=10,num_epochs=1000,shuffle=True)
+model.train(input_fn=input_func,steps=1000)
+train_metrics=model.evaluate(input_fn=input_func,steps=1000)
+pred_input_func=tf.estimator.inputs.pandas_input_fn(x=X_eval,y=y_eval,batch_size=100,num_epochs=1,shuffle=False)
+preds=model.predict(input_fn=pred_input_func)
+print(" ")
+print(y_eval)
+predictions=list(preds)
+final_pred=[]
+for pred in predictions:
+    final_pred.append(pred["predictions"])
 
-    population_size = 100
-    n_generations = 10
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4, random_state=1)
-
-    inertia_weight = 0.8
-    cognitive_weight = 0.8
-    social_weight = 0.8
-
-    print ("Population Size: %d" % population_size)
-    print ("Generations: %d" % n_generations)
-    print ("")
-    print ("Inertia Weight: %.2f" % inertia_weight)
-    print ("Cognitive Weight: %.2f" % cognitive_weight)
-    print ("Social Weight: %.2f" % social_weight)
-    print ("")
-
-    model = ParticleSwarmOptimizedNN(population_size=population_size, 
-                        inertia_weight=inertia_weight,
-                        cognitive_weight=cognitive_weight,
-                        social_weight=social_weight,
-                        max_velocity=5,
-                        model_builder=model_builder)
-
-    print("Model Built---------------------")
-
-    model = model.evolve(X_train, y_train, n_generations=n_generations)
-
-    print("----------------------Model Evolved")
-
-    loss, accuracy = model.test_on_batch(X_test, y_test)
-
-    print ("Accuracy: %.1f%%" % float(100*accuracy))
-
-    # Reduce dimension to 2D using PCA and plot the results
-    y_pred = np.argmax(model.predict(X_test), axis=1)
-    #Plot().plot_in_2d(X_test, y_pred, title="Particle Swarm Optimized Neural Network", accuracy=accuracy, legend_labels=range(y.shape[1]))
-'''
-if __name__ == "__main__":
-    main()
+#p = cross_val_score(model, X_eval, y_eval)
+#print(final_pred)
+print(preds)
+print("Ended")

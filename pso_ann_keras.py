@@ -25,8 +25,8 @@ df = pd.read_csv("data.csv",sep=',')
 x = normalize(df)
 X = pd.DataFrame(x).drop(labels="PPV", axis=1)
 Y = pd.DataFrame(df.PPV)
-print(X)
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.4, random_state=1)
+print(Y)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=1)
 
 #dataframe = pandas.read_csv("housing.csv", delim_whitespace=True, header=None)
 #dataset = dataframe.values
