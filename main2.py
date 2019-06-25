@@ -52,8 +52,19 @@ plt.title('model loss')
 plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
-plt.show()
+#plt.show()
 
-Xnew = np.array([[677,236,3,2.5,63,9.5]])#,4.42
-Ynew = model.predict(Xnew)
-print(Ynew)#*y_max)/2)
+#Xnew = np.array([[438,222,2.5,2,40,10]])#,1.99
+#Ynew = model.predict(Xnew)
+x_ans = []
+x=df.drop("PPV",axis=1)
+
+'''
+for i in x:
+    ans = model.predict(list(i))
+    x_ans.append(ans)
+
+
+print(x_ans)#*y_max)/2)
+#677,236,3,2.5,63,9.5,4.42
+'''
