@@ -42,7 +42,7 @@ def model_builder(n_inputs, n_outputs):
 	model.add(Dense(8))
 	model.add(Activation('relu'))
 	model.add(Dense(1))
-	model.add(Activation('linear'))
+	model.add(Activation('relu'))
 
 	return model
 
@@ -81,11 +81,16 @@ model = ParticleSwarmOptimizedNN(population_size=population_size,
 
 print("######################################################################")
 
-print(X_train, y_train)
+#print(X_train, y_train)
 model = model.evolve(X_train, y_train, n_generations=n_generations)
 
 print("######################################################################")
-loss, accuracy = model.test_on_batch(X_test, y_test)
-print(X_test, y_test)
+_, loss, accuracy = model.test_on_batch(X_test, y_test)
+#print(X_test, y_test)8iii
+#print(loss)
 
+inp_arr = pd.DataFrame([[0.624650,0.692476,0.000000,0.000000,0.218002,0.000000]])
+inp_lab = pd.DataFrame([0.066579])
+Ans, a1, a2 = model.test_on_batch(inp_arr, inp_lab)
+print(Ans)
 print ("Accuracy: %.1f%%" % float(100*accuracy))

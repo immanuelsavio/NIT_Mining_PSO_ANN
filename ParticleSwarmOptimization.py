@@ -74,7 +74,7 @@ class ParticleSwarmOptimizedNN():
         
     def _calculate_fitness(self, individual):
         """ Evaluate the individual on the test set to get fitness scores """
-        loss, acc = individual.test_on_batch(self.X, self.y)
+        val, loss, acc = individual.test_on_batch(self.X, self.y)
         individual.fitness = 1 / (loss + 1e-8)
         individual.accuracy = acc
 
