@@ -37,12 +37,16 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 def model_builder(n_inputs, n_outputs):    
 
 	model = NeuralNetwork(optimizer=Adam(), loss=CrossEntropy)
-	model.add(Dense(12, input_shape=(n_inputs,)))
+	model.add(Dense(64, input_shape=(n_inputs,)))
 	model.add(Activation('relu'))
-	model.add(Dense(8))
+	model.add(Dense(128))
+	model.add(Activation('relu'))
+	model.add(Dense(128))
+	model.add(Activation('relu'))
+	model.add(Dense(64))
 	model.add(Activation('relu'))
 	model.add(Dense(1))
-	model.add(Activation('relu'))
+	model.add(Activation('linear'))
 
 	return model
 
@@ -54,9 +58,9 @@ print(model_builder(n_inputs=X.shape[1], n_outputs=y.shape[1]).summary())
 population_size = 100
 n_generations = 10
 
-inertia_weight = 0.8
-cognitive_weight = 0.8
-social_weight = 0.8
+inertia_weight = 0.6
+cognitive_weight = 0.6
+social_weight = 0.6
 
 print ("Population Size: %d" % population_size)
 print ("Generations: %d" % n_generations)
@@ -89,8 +93,8 @@ _, loss, accuracy = model.test_on_batch(X_test, y_test)
 #print(X_test, y_test)8iii
 #print(loss)
 
-inp_arr = pd.DataFrame([[0.624650,0.692476,0.000000,0.000000,0.218002,0.000000]])
+inp_arr = pd.DataFrame(0.156248,0.146841,0.545408,0.545408,0.247065,0.545408)
 inp_lab = pd.DataFrame([0.066579])
 Ans, a1, a2 = model.test_on_batch(inp_arr, inp_lab)
 print(Ans)
-print ("Accuracy: %.1f%%" % float(100*accuracy))
+#print ("Accuracy: %.1f%%" % float(100*accuracy))
