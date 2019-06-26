@@ -31,7 +31,7 @@ X = normalize(data)
 df = pd.DataFrame(X)
 X = df.drop(labels="PPV", axis = 1)
 y = pd.DataFrame(df.PPV)
-print(y)
+#print(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
 
 def model_builder(n_inputs, n_outputs):    
@@ -70,8 +70,8 @@ y_test = pd.DataFrame(y_test).to_numpy()
 X_train = pd.DataFrame(X_train).to_numpy()
 y_train = pd.DataFrame(y_train).to_numpy()
 
-print(X)
-'''
+#print(X)
+
 model = ParticleSwarmOptimizedNN(population_size=population_size, 
                     inertia_weight=inertia_weight,
                     cognitive_weight=cognitive_weight,
@@ -89,4 +89,3 @@ loss, accuracy = model.test_on_batch(X_test, y_test)
 print(X_test, y_test)
 
 print ("Accuracy: %.1f%%" % float(100*accuracy))
-'''
