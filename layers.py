@@ -3,7 +3,7 @@ from __future__ import print_function, division
 import math
 import numpy as np
 import copy
-from activation_functions import Sigmoid, ReLU, SoftPlus, LeakyReLU
+from activation_functions import Sigmoid, ReLU, SoftPlus, LeakyReLU, Linear
 from activation_functions import TanH, ELU, SELU, Softmax
 
 
@@ -603,6 +603,7 @@ class Dropout(Layer):
         return self.input_shape
 
 activation_functions = {
+    'linear': Linear,
     'relu': ReLU,
     'sigmoid': Sigmoid,
     'selu': SELU,

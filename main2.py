@@ -19,6 +19,7 @@ df=pd.read_csv("data.csv")
 
 y= df["PPV"]
 x=df.drop("PPV",axis=1)
+ 
 
 #print(x.head)
 #print(y.head)
@@ -54,7 +55,7 @@ plt.xlabel('epoch')
 plt.legend(['train', 'validation'], loc='upper left')
 #plt.show()
 
-Xnew = np.array([[391,235,3,2.5,140,10]])#,0.55
+Xnew = np.array([[0.400267738,0.5,1,1,1,1]])#,0.55
 Ynew = model.predict(Xnew)
 #x_ans = []
 #x=df.drop("PPV",axis=1)

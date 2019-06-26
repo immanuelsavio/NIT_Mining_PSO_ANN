@@ -1,5 +1,12 @@
 import numpy as np
 
+class Linear():
+    def __call__(self,x):
+        return x
+
+    def gradient(self, x):
+        return self.__call__(x)
+
 class Sigmoid():
     def __call__(self, x):
         return 1 / (1 + np.exp(-x))
